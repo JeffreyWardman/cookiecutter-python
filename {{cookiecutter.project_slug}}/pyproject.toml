@@ -1,0 +1,80 @@
+[tool.poetry]
+name = "{{cookiecutter.project_slug}}"
+version = "0.0.0"
+description = ""
+authors = ["{{cookiecutter.full_name}} <{{cookiecutter.email}}>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+loguru = "^0.7.0"
+numpy = "^1.25.2"
+pandas = "^2.0.3"
+tqdm = "^4.65.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+commitizen = "^3.6.0"
+flake8 = "^6.1.0"
+isort = "^5.12.0"
+mypy = "^1.4.1"
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.commitizen]
+name = "cz_conventional_commits"
+version = "0.0.0"
+tag_format = "v$major.$minor.$patch$prerelease"
+update_changelog_on_bump = true
+bump_message = "ci: release $current_version → $new_version"
+changelog_incremental = true
+annotated_tag = true
+version_files = ["pyproject.toml:version"]
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+include = '\.pyi?$'
+exclude = '''
+^/(
+  (
+    \.eggs
+    | .venv
+    | \.git
+    | build
+    | dist
+    | notebooks
+  )
+)
+'''
+
+[tool.isort]
+line_length = 120
+profile = "black"
+src_paths = ["{{cookiecutter.project_slug}}", "tests"]
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = ["--cov={{cookiecutter.project_slug}}", "--cov-report=term-missing"]
+testpaths = ["tests"]
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+
+[tool.mypy]
+files = "{{cookiecutter.project_slug}}/**/*.py"
+python_version = 3.10
+follow_imports = "skip"
+strict_optional = "False"
+warn_redundant_casts = "True"
+warn_unused_ignores = "True"
+disallow_any_generics = "False"
+check_untyped_defs = "True"
+no_implicit_reexport = "True"
+no_implicit_optional = "True"
+disallow_untyped_defs = "False"
+ignore_missing_imports = "True"
+namespace_packages = "True"
+exclude = []
