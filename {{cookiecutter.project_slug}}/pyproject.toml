@@ -6,20 +6,20 @@ authors = ["{{cookiecutter.full_name}} <{{cookiecutter.email}}>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.10"
-loguru = "^0.7.0"
-numpy = "^1.25.2"
-pandas = "^2.0.3"
-tqdm = "^4.65.2"
+python = ">=3.10,<3.11.dev0"
+loguru = "^0.7.2"
+numpy = "^2.0.1"
+pandas = "^2.2.2"
+tqdm = "^4.66.5"
 
 [tool.poetry.group.dev.dependencies]
-black = "^23.7.0"
-commitizen = "^3.6.0"
-flake8 = "^6.1.0"
-isort = "^5.12.0"
-mypy = "^1.4.1"
-pytest = "^7.4.0"
-pytest-cov = "^4.1.0"
+black = "^24.8.0"
+commitizen = "^3.28.0"
+flake8 = "^7.1.1"
+isort = "^5.13.2"
+mypy = "^1.11.1"
+pytest = "^8.3.2"
+pytest-xdist = "^3.6.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -59,7 +59,7 @@ src_paths = ["{{cookiecutter.project_slug}}", "tests"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = ["--cov={{cookiecutter.project_slug}}", "--cov-report=term-missing"]
+addopts = ["-n=auto", "--durations=0"]
 testpaths = ["tests"]
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 

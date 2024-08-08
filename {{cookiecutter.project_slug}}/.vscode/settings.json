@@ -1,7 +1,10 @@
 {
     "git.autofetch": true,
     "editor.formatOnSave": true,
+    "editor.rulers": [120],
+    "editor.minimap.side": "right",
     "explorer.autoReveal": false,
+    "debug.inlineValues": "on",
     "terminal.integrated.cwd": "${workspaceFolder}",
     "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
     "python.testing.pytestEnabled": true,
@@ -16,7 +19,7 @@
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
         "editor.codeActionsOnSave": {
-            "source.organizeImports": true
+            "source.organizeImports": "explicit"
         },
     },
     "isort.args": [

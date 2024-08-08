@@ -1,32 +1,21 @@
-FROM python:3.10-slim
-ENV DEBIAN_FRONTEND=noninteractive
+FROM python:3.10
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates \
-    build-essential \
-    make \
-    curl \
-    libssl-dev \
-    software-properties-common \
-    git \
-    git-lfs \
-    vim \
-    sudo \
-    libgl1-mesa-glx \
-    ffmpeg \
-    ninja-build \
-    python3-dev && \
-    apt-get clean
-
+# Install poetry
+ENV POETRY_HOME=/opt/poetry
+RUN python3 -m venv $POETRY_HOME && $POETRY_HOME/bin/pip install poetry==1.6.1
+ENV PATH="$POETRY_HOME/bin:$PATH"
+COPY . /app
 WORKDIR /app
 
-# Install Python 3.10
-RUN add-apt-repository -y ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt install -y python3.10 && \
-    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
+RUN apt-get -y update && \
+    apt-get install -y --no-install-recommends \
+    libgl1-mesa-glx && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    apt-get clean
+RUN poetry install
 
-# Install Poetry
-ENV PATH="/root/.local/bin:$PATH"
-RUN curl -sSL https://install.python-poetry.org | python -
+ENV SHELL=/bin/bash
+
+ENTRYPOINT ["poetry", "run"]
+CMD ["python"]
