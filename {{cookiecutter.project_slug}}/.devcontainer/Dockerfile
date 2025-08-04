@@ -1,21 +1,20 @@
-FROM python:3.10
+FROM python:3.13-slim
 
-# Install poetry
-ENV POETRY_HOME=/opt/poetry
-RUN python3 -m venv $POETRY_HOME && $POETRY_HOME/bin/pip install poetry==1.6.1
-ENV PATH="$POETRY_HOME/bin:$PATH"
-COPY . /app
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
 WORKDIR /app
 
-RUN apt-get -y update && \
-    apt-get install -y --no-install-recommends \
-    libgl1-mesa-glx && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt-get clean
-RUN poetry install
+# Install dependencies
+COPY uv.lock /app/uv.lock
+COPY pyproject.toml /app/pyproject.toml
+RUN uv sync --frozen --no-install-project
 
-ENV SHELL=/bin/bash
+# Copy the project into the image
+COPY . /app
 
-ENTRYPOINT ["poetry", "run"]
+# Sync the project
+RUN uv sync --frozen
+
+ENTRYPOINT ["uv", "run"]
 CMD ["python"]

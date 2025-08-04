@@ -1,3 +1,3 @@
 class TestExample:
-    def test_works(self):
+    def test_works(self) -> bool:
         return True

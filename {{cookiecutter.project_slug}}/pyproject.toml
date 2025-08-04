@@ -1,61 +1,55 @@
-[tool.poetry]
+[project]
 name = "{{cookiecutter.project_slug}}"
 version = "0.0.0"
 description = ""
-authors = ["{{cookiecutter.full_name}} <{{cookiecutter.email}}>"]
+authors = [{name = "{{cookiecutter.full_name}}", email = "{{cookiecutter.email}}"}]
 readme = "README.md"
 
-[tool.poetry.dependencies]
-python = ">=3.10,<3.11.dev0"
-loguru = "^0.7.2"
-numpy = "^2.0.1"
-pandas = "^2.2.2"
-tqdm = "^4.66.5"
+requires-python = ">=3.13,<3.14"
+dependencies = ["numpy>=2.3.2", "pydantic>=2.11.7"]
 
-[tool.poetry.group.dev.dependencies]
-black = "^24.8.0"
-commitizen = "^3.28.0"
-flake8 = "^7.1.1"
-isort = "^5.13.2"
-mypy = "^1.11.1"
-pytest = "^8.3.2"
-pytest-xdist = "^3.6.1"
+[dependency-groups]
+dev = [
+    "commitizen>=4.8.3",
+    "deptry>=0.23.1",
+    "mypy>=1.17.1",
+    "pre-commit>=4.2.0",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "ruff>=0.12.7",
+]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.uv]
+default-groups = ["dev"]
 
 [tool.commitizen]
 name = "cz_conventional_commits"
 version = "0.0.0"
 tag_format = "v$major.$minor.$patch$prerelease"
 update_changelog_on_bump = true
-bump_message = "ci: release $current_version → $new_version"
+bump_message = "bump: version $current_version → $new_version"
 changelog_incremental = true
 annotated_tag = true
 version_files = ["pyproject.toml:version"]
 
-[tool.black]
-line-length = 120
-target-version = ['py310']
-include = '\.pyi?$'
-exclude = '''
-^/(
-  (
-    \.eggs
-    | .venv
-    | \.git
-    | build
-    | dist
-    | notebooks
-  )
-)
-'''
+[build-system]
+requires = ["setuptools >= 61.0"]
+build-backend = "setuptools.build_meta"
 
-[tool.isort]
-line_length = 120
-profile = "black"
-src_paths = ["{{cookiecutter.project_slug}}", "tests"]
+[tool.setuptools]
+py-modules = ["{{cookiecutter.project_slug}}"]
+
+[tool.mypy]
+files = ["{{cookiecutter.project_slug}}"]
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+ignore_missing_imports = true
+exclude = [".venv"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
@@ -63,18 +57,65 @@ addopts = ["-n=auto", "--durations=0"]
 testpaths = ["tests"]
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 
-[tool.mypy]
-files = "{{cookiecutter.project_slug}}/**/*.py"
-python_version = 3.10
-follow_imports = "skip"
-strict_optional = "False"
-warn_redundant_casts = "True"
-warn_unused_ignores = "True"
-disallow_any_generics = "False"
-check_untyped_defs = "True"
-no_implicit_reexport = "True"
-no_implicit_optional = "True"
-disallow_untyped_defs = "False"
-ignore_missing_imports = "True"
-namespace_packages = "True"
-exclude = []
+[tool.ruff]
+target-version = "py313"
+line-length = 140
+fix = true
+exclude = [".venv"]
+
+[tool.ruff.lint]
+select = [
+    # flake8-2020
+    "YTT",
+    # flake8-bandit
+    "S",
+    # flake8-bugbear
+    "B",
+    # flake8-builtins
+    "A",
+    # flake8-comprehensions
+    "C4",
+    # flake8-debugger
+    "T10",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+    # mccabe
+    "C90",
+    # pycodestyle
+    "E",
+    "W",
+    # pyflakes
+    "F",
+    # pygrep-hooks
+    "PGH",
+    # pyupgrade
+    "UP",
+    # ruff
+    "RUF",
+    # tryceratops
+    "TRY",
+]
+ignore = [
+    # LineTooLong
+    "E501",
+    # DoNotAssignLambda
+    "E731",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]
+
+[tool.ruff.format]
+preview = true
+
+[tool.deptry]
+ignore = ["DEP002", "DEP003", "DEP004"]
+
+# [tool.coverage.report]
+# skip_empty = true
+
+# [tool.coverage.run]
+# branch = true
+# source = ["{{cookiecutter.project_slug}}"]
